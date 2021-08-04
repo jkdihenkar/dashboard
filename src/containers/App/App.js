@@ -469,7 +469,7 @@ export function App({
                     component={CustomResourceDefinition}
                   />
 
-                  <Redirect to={urls.pipelineRuns.all()} />
+                  <Redirect to={urls.pipelines.all()} />
                 </Switch>
               </PageErrorBoundary>
             </Content>
