@@ -2,7 +2,6 @@
 .github
 .storybook
 base
-config_frontend
 coverage
 dist
 docs
