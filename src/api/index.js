@@ -16,10 +16,9 @@ import { labels as labelConstants } from '@tektoncd/dashboard-utils';
 
 import { useClusterTask } from './clusterTasks';
 import { useTask } from './tasks';
-import { get, post } from './comms';
+import { get, getAPIRoot, post } from './comms';
 import {
   apiRoot,
-  checkData,
   getKubeAPI,
   getQueryParams,
   getResourcesAPI,
@@ -52,7 +51,7 @@ function getCustomResourcesAPI({ filters, name, ...rest }) {
 
 export function getCustomResources({ filters = [], ...rest }) {
   const uri = getCustomResourcesAPI({ filters, ...rest });
-  return get(uri).then(checkData);
+  return get(uri);
 }
 
 export function getCustomResource(params) {
@@ -78,7 +77,7 @@ export function useTaskByKind({ kind, ...rest }, queryConfig) {
 }
 
 export async function getInstallProperties() {
-  const uri = `${apiRoot}/v1/properties`;
+  const uri = `${getAPIRoot({ isDashboardAPI: true })}/v1/properties`;
   let data;
   try {
     data = await get(uri);
@@ -104,7 +103,7 @@ function getNamespacesAPI({ isWebSocket } = {}) {
 
 export function getNamespaces() {
   const uri = getNamespacesAPI();
-  return get(uri).then(checkData);
+  return get(uri);
 }
 
 export function useNamespaces(queryConfig) {
@@ -296,9 +295,7 @@ export function importResources({
 export function getAPIResource({ group, version, type }) {
   const uri = [
     apiRoot,
-    group === 'core'
-      ? `/proxy/api/${version}`
-      : `/proxy/apis/${group}/${version}`
+    group === 'core' ? `/api/${version}` : `/apis/${group}/${version}`
   ].join('');
 
   return get(uri).then(({ resources }) =>
